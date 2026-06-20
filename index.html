@@ -28,20 +28,15 @@
                     </div>
                     <div class="input-group">
                         <i class="fas fa-id-card"></i>
-                        <input id="enrol" placeholder="Enrolment Number">
+                        <input id="enrol" placeholder="Enrolment or Registration Number">
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input id="mobile" placeholder="Mobile Number" type="tel">
                     </div>
                     <div class="input-group">
                         <i class="fas fa-calendar"></i>
                         <input id="dob" type="date">
-                    </div>
-                    <div class="photo-upload-group" onclick="document.getElementById('photo').click()">
-                        <i class="fas fa-camera"></i>
-                        <span id="photo-label">Upload Photo</span>
-                        <input type="file" id="photo" accept="image/*" style="display:none" onchange="previewPhoto(this)">
-                    </div>
-                    <div id="photo-preview-box" style="display:none">
-                        <img id="photo-preview" src="" alt="Preview">
-                        <span>Photo selected ✓</span>
                     </div>
                     <button onclick="generateQR()">
                         <i class="fas fa-qrcode"></i> Generate QR Code
@@ -58,28 +53,16 @@
         <script>
             const $ = id => document.getElementById(id);
 
-            function previewPhoto(input) {
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = e => {
-                        $('photo-preview').src = e.target.result;
-                        $('photo-preview-box').style.display = 'flex';
-                        $('photo-label').textContent = input.files[0].name;
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-
             function generateQR() {
                 const name = $('name').value.trim();
                 const dept = $('dept').value.trim();
                 const enrol = $('enrol').value.trim();
                 const dob = $('dob').value;
-                if (!name || !dept || !enrol || !dob) return alert('Fill all fields');
+                const mobile = $('mobile').value.trim();
+                if (!name || !dept || !enrol || !dob || !mobile) return alert('Fill all fields');
 
-                const previewSrc = $('photo').files && $('photo').files[0] ? $('photo-preview').src : '';
-                const cardData = encodeURIComponent(JSON.stringify({ name, dept, enrol, dob, photo: previewSrc || '' }));
-                const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent('index.html?card=' + cardData);
+                const cardData = `Name: ${name}\nDepartment: ${dept}\nEnrolment: ${enrol}\nDOB: ${dob}\nMobile: ${mobile}`;
+                const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(cardData);
                 $('qrimage').src = qrUrl;
                 $('imgbox').classList.add('show-img');
             }
