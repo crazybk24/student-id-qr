@@ -52,6 +52,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
 
         <script>
@@ -75,8 +76,10 @@
                 const enrol = $('enrol').value.trim();
                 const dob = $('dob').value;
                 if (!name || !dept || !enrol || !dob) return alert('Fill all fields');
-                const qrData = encodeURIComponent(`card.html?name=${name}&dept=${dept}&enrol=${enrol}&dob=${dob}`);
-                const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + qrData;
+
+                const previewSrc = $('photo').files && $('photo').files[0] ? $('photo-preview').src : '';
+                const cardData = encodeURIComponent(JSON.stringify({ name, dept, enrol, dob, photo: previewSrc || '' }));
+                const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent('index.html?card=' + cardData);
                 $('qrimage').src = qrUrl;
                 $('imgbox').classList.add('show-img');
             }
